@@ -1,0 +1,11 @@
+string command
+string client_id
+string session_id
+string device_id
+int64 volume
+int64 mode
+string asset_url
+---
+string session_id
+int64 error_code
+string error_message
