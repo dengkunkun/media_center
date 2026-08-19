@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.20)
 project(streamer)
 
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-  add_compile_options(-Wall -Wextra -Wpedantic)
+  add_compile_options(-std=c++20 -Wall -Wextra -Wpedantic)
 endif()
 
 # find dependencies
@@ -53,14 +53,12 @@ add_executable(streamer src/main.cpp src/streamer_node.cpp
 	src/dispatch_queue.cpp
 	src/stream.cpp
 	src/stream_handler.cpp
-	src/dc_bridge.cpp
-	src/dc_bridge_node.cpp
 )
 
-target_link_libraries(streamer PUBLIC rclcpp::rclcpp
-	m datachannel pipewire-0.3 ${LIBAVUTIL} ${LIBAVFILTER} ${LIBAVFORMAT} ${LIBAVCODEC} ${LIBAVDEVICE})
-# ament_target_dependencies(streamer PUBLIC rclcpp)
-# target_link_libraries(streamer PUBLIC pipewire-0.3 ${LIBAVUTIL} ${LIBAVFILTER} ${LIBAVFORMAT} ${LIBAVCODEC})
+# target_link_libraries(streamer PUBLIC rclcpp::rclcpp
+	# m datachannel pipewire-0.3 ${LIBAVUTIL} ${LIBAVFILTER} ${LIBAVFORMAT} ${LIBAVCODEC} ${LIBAVDEVICE})
+ament_target_dependencies(streamer PUBLIC rclcpp)
+target_link_libraries(streamer PUBLIC m datachannel pipewire-0.3 ${LIBAVUTIL} ${LIBAVFILTER} ${LIBAVFORMAT} ${LIBAVCODEC} ${LIBAVDEVICE})
 
 install(TARGETS
   streamer

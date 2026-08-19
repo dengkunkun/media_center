@@ -19,6 +19,10 @@ ros2 pkg create --build-type ament_cmake --license Apache-2.0 streamer
 ```
 colcon build --packages-select streamer --mixin compile-commands
 ```
+或者
+```
+colcon build --packages-select streamer --cmake-args -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+```
 
 ## 安装模块
 ```
