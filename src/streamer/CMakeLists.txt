@@ -11,7 +11,18 @@ find_package(ament_cmake REQUIRED)
 # further dependencies manually.
 # find_package(<dependency> REQUIRED)
 find_package(rclcpp REQUIRED)
+find_package(rclcpp_action REQUIRED)
+find_package(geometry_msgs REQUIRED)
+find_package(nav2_msgs REQUIRED)
+find_package(nav2_util REQUIRED)
 
+set(dependencies
+  rclcpp
+  rclcpp_action
+  geometry_msgs
+  nav2_msgs
+  nav2_util
+)
 
 find_library(
   LIBAVUTIL
@@ -53,11 +64,13 @@ add_executable(streamer src/main.cpp src/streamer_node.cpp
 	src/dispatch_queue.cpp
 	src/stream.cpp
 	src/stream_handler.cpp
+  src/data_transceiver.cpp
+  src/cmd_vel_telemetry.cpp
 )
 
 # target_link_libraries(streamer PUBLIC rclcpp::rclcpp
 	# m datachannel pipewire-0.3 ${LIBAVUTIL} ${LIBAVFILTER} ${LIBAVFORMAT} ${LIBAVCODEC} ${LIBAVDEVICE})
-ament_target_dependencies(streamer PUBLIC rclcpp)
+ament_target_dependencies(streamer PUBLIC ${dependencies})
 target_link_libraries(streamer PUBLIC m datachannel pipewire-0.3 ${LIBAVUTIL} ${LIBAVFILTER} ${LIBAVFORMAT} ${LIBAVCODEC} ${LIBAVDEVICE})
 
 install(TARGETS

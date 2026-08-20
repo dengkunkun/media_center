@@ -98,6 +98,9 @@ int main(int argc, char *argv[])
 {
 	(void)argc;
 	(void)argv;
+	rclcpp::init(argc, argv);
+	auto streamerNode=std::make_shared<StreamerNode>();
+	streamerNode->init();
 
 	av_log_set_level(AV_LOG_DEBUG);
 	avdevice_register_all();
@@ -168,10 +171,10 @@ int main(int argc, char *argv[])
 	pw_init(&argc, &argv);
 
 	
-	rclcpp::init(argc, argv);
+	
 	{
 		rclcpp::executors::MultiThreadedExecutor executor;
-		executor.add_node(std::make_shared<StreamerNode>());
+		executor.add_node(streamerNode);
 		executor.spin();
 	}
 	rclcpp::shutdown();
@@ -309,6 +312,11 @@ std::shared_ptr<Client> create_peer_connection(const rtc::Configuration &config,
 			}
 		}
 	);
+	pc->onDataChannel([id](std::shared_ptr<rtc::DataChannel> dc) {
+		std::cout << "DataChannel from " << id << " received with label \"" << dc->label() << "\""
+		          << std::endl;
+		remote_control::DataTransceiver::instance()->saveDataChannel(id,dc);
+	});
 
 	// ssrc=102
 	// payload_type=1
@@ -354,6 +362,11 @@ std::shared_ptr<Client> create_peer_connection(const rtc::Configuration &config,
 		}
 	);
 
+	auto dc_telemetry = pc->createDataChannel("telemetry");
+	remote_control::DataTransceiver::instance()->saveDataChannel(id,dc_telemetry);
+
+	auto dc_map = pc->createDataChannel("map");
+	remote_control::DataTransceiver::instance()->saveDataChannel(id,dc_map);
 	client->_data_channel = dc;
 
 
