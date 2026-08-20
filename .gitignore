@@ -262,3 +262,7 @@ cython_debug/
 # PyPI configuration file
 .pypirc
 
+build
+log
+install
+libs
