@@ -15,6 +15,7 @@ find_package(rclcpp_action REQUIRED)
 find_package(geometry_msgs REQUIRED)
 find_package(nav2_msgs REQUIRED)
 find_package(nav2_util REQUIRED)
+find_package(tf2_ros REQUIRED)
 
 set(dependencies
   rclcpp
@@ -22,6 +23,7 @@ set(dependencies
   geometry_msgs
   nav2_msgs
   nav2_util
+  tf2_ros
 )
 
 find_library(
@@ -66,6 +68,7 @@ add_executable(streamer src/main.cpp src/streamer_node.cpp
 	src/stream_handler.cpp
   src/data_transceiver.cpp
   src/cmd_vel_telemetry.cpp
+  src/pose_uploader.cpp
 )
 
 # target_link_libraries(streamer PUBLIC rclcpp::rclcpp

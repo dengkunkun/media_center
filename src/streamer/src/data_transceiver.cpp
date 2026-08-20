@@ -2,6 +2,8 @@
 #include <rclcpp/node.hpp>
 
 namespace remote_control {
+IBusinessHandler::~IBusinessHandler() = default;
+
 namespace {
 template <class T> std::weak_ptr<T> make_weak_ptr(std::shared_ptr<T> ptr) {
   return ptr;
@@ -70,15 +72,15 @@ void DataTransceiver::registerBussinessHandler(std::unique_ptr<IBusinessHandler>
   handlersMap_[{handler->get_label(),handler->get_type()}] =std::move(handler);
 }
 
-//   bool DataTransceiver::sendMessage(const std::string& label,const
-//   std::string& message)
-//   {
-//     auto dc=getDataChannel(label);
-//     if(dc)
-//     {
-//         return dc->send(message);
-//     }
-//   }
+bool DataTransceiver::sendMessage(const std::string &label,
+                                  const std::string &message) {
+    DataChannelCtx *pdctx =
+        DataTransceiver::instance()->getDataChannelCtxByLabel(label);
+    if (pdctx && pdctx->is_open_.load()) {
+      return pdctx->dc_->send(message);
+    }
+    return false;
+}
 
 DataChannelCtx *DataTransceiver::getDataChannelCtxById(std::string id) {
   for (const std::pair<std::string, std::shared_ptr<DataChannelCtx>> &m :

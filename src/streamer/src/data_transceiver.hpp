@@ -18,6 +18,7 @@
 
 #include "i_bussiness_handler.hpp"
 #include "cmd_vel_telemetry.hpp"
+#include "pose_uploader.hpp"
 #include "nlohmann/json.hpp"
 
 namespace remote_control {
@@ -47,7 +48,10 @@ public:
     p_instance = this; 
   }
   ~DataTransceiver() { p_instance = nullptr; }
-  void init(){registerBussinessHandler(std::make_unique<CmdVelTeleMetry>());}
+  void init() {
+    registerBussinessHandler(std::make_unique<CmdVelTeleMetry>());
+    registerBussinessHandler(std::make_unique<PoseUploader>());
+  }
 
   // // 保存IBusinessHandler
   void registerBussinessHandler(std::unique_ptr<IBusinessHandler> handler);
@@ -55,7 +59,7 @@ public:
   void saveDataChannel(const std::string &id,
                       std::shared_ptr<rtc::DataChannel> dc);
 
-  // bool sendMessage(const std::string& label,const std::string& message);
+  bool sendMessage(const std::string& label,const std::string& message);
 
   static DataTransceiver *instance();
   static rclcpp::Logger get_logger();

@@ -5,7 +5,7 @@
 namespace remote_control {
 class IBusinessHandler {
 public:
-  virtual ~IBusinessHandler() = default;
+  virtual ~IBusinessHandler();
   // 返回当前模块使用哪个label
   virtual std::string get_label() = 0;
   // 返回当前业务的type
